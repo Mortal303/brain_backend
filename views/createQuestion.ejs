@@ -1,0 +1,24 @@
+<%- include ('partials/header'); -%>
+
+<div class="goback">
+    <button><a href="/">Home</a></button>
+</div>
+
+<center>
+    <div class="form-div">
+
+        <form onsubmit="addQuestion(); return false;">
+            <input type="text" id="title" name="title" placeholder="Title" required>
+            <input type="text" id="category" name="category" placeholder="Category" required>
+            <input type="text" id="question" name="question" placeholder="Question" required>
+            <input type="text" id="answer" name="answer" placeholder="Correct Answer" required>
+            <input type="text" id="option_1" name="option_1" placeholder="Option 1" required>
+            <input type="text" id="option_2" name="option_2" placeholder="Option 2" required>
+            <input type="text" id="option_3" name="option_3" placeholder="Option 3" required>
+            <input type="text" id="option_4" name="option_4" placeholder="Option 4" required>
+        </form>
+        <button class="button" onclick="addQuestion();">Submit</button>
+    </div>
+</center>
+
+<%- include ('partials/footer'); -%>
