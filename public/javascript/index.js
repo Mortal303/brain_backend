@@ -37,6 +37,7 @@ let userScore = 0;
 let counter;
 let counterLine;
 let widthValue = 0;
+let sno = 0;
 
 var questions;
 const restart_quiz = result_box.querySelector(".buttons .restart");
@@ -51,6 +52,7 @@ restart_quiz.onclick = () => {
     que_numb = 1;
     userScore = 0;
     widthValue = 0;
+    sno = 0;
     showQuetions(que_count); //calling showQestions function
     queCounter(que_numb); //passing que_numb value to queCounter
     clearInterval(counter); //clear counter
@@ -59,6 +61,7 @@ restart_quiz.onclick = () => {
     startTimerLine(widthValue); //calling startTimerLine function
     timeText.textContent = "Time Left"; //change the text of timeText to Time Left
     next_btn.classList.remove("show"); //hide the next button
+    last_btn.classList.remove("show");
 }
 
 // if quitQuiz button clicked
@@ -67,11 +70,11 @@ quit_quiz.onclick = () => {
 }
 
 const next_btn = document.querySelector("footer .next_btn");
+const last_btn = document.querySelector("footer .last_btn");
 const bottom_ques_counter = document.querySelector("footer .total_que");
 
 // if Next Que button clicked
 next_btn.onclick = () => {
-    if (que_count < questions.length - 1) { //if question count is less than total question length
         que_count++; //increment the que_count value
         que_numb++; //increment the que_numb value
         showQuetions(que_count); //calling showQestions function
@@ -82,19 +85,22 @@ next_btn.onclick = () => {
         startTimerLine(widthValue); //calling startTimerLine function
         timeText.textContent = "Time Left"; //change the timeText to Time Left
         next_btn.classList.remove("show"); //hide the next button
-    } else {
-        clearInterval(counter); //clear counter
-        clearInterval(counterLine); //clear counterLine
-        showResult(); //calling showResult function
-    }
+}
+
+last_btn.onclick = () => {
+    clearInterval(counter); //clear counter
+    clearInterval(counterLine); //clear counterLine
+    showResult(); //calling showResult function
 }
 
 // getting questions and options from array
 function showQuetions(index) {
+    sno++;
     const que_text = document.querySelector(".que_text");
 
     //creating a new span and div tag for question and option and passing the value using array index
-    let que_tag = '<span>' + questions[index].numb + ". " + questions[index].question + '</span>';
+    let que_tag = '<span>' + sno + ". " + questions[index].question + '</span>';
+    questions[index].options = shuffle(questions[index].options);
     let option_tag = '<div class="option"><span>' + questions[index].options[0] + '</span></div>' +
         '<div class="option"><span>' + questions[index].options[1] + '</span></div>' +
         '<div class="option"><span>' + questions[index].options[2] + '</span></div>' +
@@ -143,7 +149,9 @@ function optionSelected(answer) {
     for (i = 0; i < allOptions; i++) {
         option_list.children[i].classList.add("disabled"); //once user select an option then disabled all options
     }
-    next_btn.classList.add("show"); //show the next button if user selected any option
+    if(que_count == questions.length - 1){
+        last_btn.classList.add("show"); //show the last button if user selected any option on last question
+    } else next_btn.classList.add("show"); //show the next button if user selected any option
 }
 
 function showResult() {
@@ -189,7 +197,9 @@ function startTimer(time) {
             for (i = 0; i < allOptions; i++) {
                 option_list.children[i].classList.add("disabled"); //once user select an option then disabled all options
             }
-            next_btn.classList.add("show"); //show the next button if user selected any option
+            if(que_count == questions.length - 1){
+                last_btn.classList.add("show"); //show the last button if user selected any option on last question
+            } else next_btn.classList.add("show"); //show the next button if user selected any option
         }
     }
 }
@@ -242,7 +252,7 @@ async function addQuestion() {
     )
 }
 
-async function shuffle(array) {
+function shuffle(array) {
     let currentIndex = array.length,  randomIndex;
   
     // While there remain elements to shuffle.
@@ -264,7 +274,8 @@ async function questionList(){
     api.ques.fetch(
         function (res) {
             res = JSON.parse(JSON.stringify(res));
-            questions = shuffle(res.data);
+            console.log(shuffle(res.data));
+            questions = res.data;
         },
         function (err) {
             console.log(err);
